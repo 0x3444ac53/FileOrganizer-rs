@@ -1,26 +1,10 @@
+use lua_things::*;
 use mlua::prelude::*;
 use std::fs::{self, DirEntry};
 use std::path::{Path, PathBuf};
 
-struct ConfigFile {}
-
 fn main() -> Result<(), ()> {
     todo!()
-}
-
-fn register_api_function<F, A, R>(
-    lua: &Lua,
-    table: LuaTable,
-    name: &str,
-    func: F,
-) -> mlua::Result<()>
-where
-    F: 'static + Send + Fn(&Lua, A) -> mlua::Result<R>,
-    R: IntoLuaMulti,
-    A: FromLuaMulti,
-{
-    let lua_func = lua.create_function(func)?;
-    table.set(name, lua_func)
 }
 
 fn find_config(path: &Path) -> Result<PathBuf, std::io::Error> {
@@ -34,19 +18,6 @@ fn find_config(path: &Path) -> Result<PathBuf, std::io::Error> {
         })
         .next()
         .ok_or_else(|| std::io::Error::other("Cunts"))
-}
-
-unsafe fn compile_fennel(fnl: String) -> Result<String, LuaError> {
-    let fennel_env = Lua::unsafe_new();
-    let require: LuaFunction = fennel_env.globals().get("require")?;
-    fennel_env
-        .load(include_str!("../assets/lua/fennel.lua"))
-        .set_name("fennel.lua")
-        .exec()?;
-    let fennel: LuaTable = require.call("fennel")?;
-    let fennel_compiler: LuaFunction = fennel.get("compileString")?;
-    let compiled_to_lua: String = fennel_compiler.call(fnl)?;
-    Ok(compiled_to_lua)
 }
 
 fn load_lua(path: &Path) -> mlua::Result<(Lua, LuaTable)> {
@@ -84,6 +55,7 @@ fn test_loading_lua() -> mlua::Result<()> {
     Ok(())
 }
 
+#[test]
 fn testing_lua_ffi() -> mlua::Result<()> {
     let path = Path::new("/Users/Nora/repos/FileOrganizer-rs/ffi/");
     let (lua, module) = load_lua(path)?;

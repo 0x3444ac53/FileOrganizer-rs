@@ -4,5 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+lua_things = { path = "./lua_things" }
 mlua = { version = "0.10.1", features = ["lua54"] }
 notify = "7.0.0"
