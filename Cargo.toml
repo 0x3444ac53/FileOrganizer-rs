@@ -1,0 +1,8 @@
+[package]
+name = "FileOrganizer-rs"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+mlua = { version = "0.10.1", features = ["lua54"] }
+notify = "7.0.0"
